@@ -1,0 +1,3 @@
+[submodule "src/@db_schema"]
+	path = src/@db_schema
+	url = https://github.com/MojdehBook/store-db-schema.git
