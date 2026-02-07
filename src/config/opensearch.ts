@@ -1,6 +1,7 @@
 import { Client } from '@opensearch-project/opensearch';
 import ENV from './env.config';
 import { AppError } from '../utils/v1/errors';
+import { ServerError } from '../utils/errors';
 
 if (!ENV.OPENSEARCH_URL)
 	throw new AppError(`Missing [OPENSEARCH_URL] env var.`);
@@ -21,5 +22,13 @@ const opensearch = new Client({
 		rejectUnauthorized: false,
 	},
 });
+
+export const checkOpenSearchConnection = async (): Promise<void> => {
+	try {
+		await opensearch.ping();
+	} catch (e) {
+		throw new ServerError(`OpenSearch is not available`, 'openSearchConfig', e);
+	}
+};
 
 export default opensearch;
