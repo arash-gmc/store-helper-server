@@ -4,8 +4,9 @@ import log from 'mb_logger';
 import ORM from './config/db.config';
 import errHandler from './middlewares/error-handler';
 import router from './routes';
+import * as CronJobs from './utils/crons';
 
-const port = Env.PORT ?? 5000;
+const port = Env.PORT ?? 6000;
 
 ORM.authenticate()
 	.then(() => {
@@ -29,3 +30,5 @@ app.use(errHandler);
 app.listen(port, () => {
 	log.info(`Express is listening at ${port}`);
 });
+
+CronJobs.generalQueueCheckInterval.start();

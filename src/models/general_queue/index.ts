@@ -42,12 +42,18 @@ export async function changeGeneralQueueStatus(
 	status: GENERAL_QUEUE_STATUS,
 	ignorelogger?: boolean
 ) {
+	const now = new Date();
 	const generalQueue = await Models.GeneralQueues.findByPk(generalQueueId);
 	if (!generalQueue) return;
 	generalQueue.status = status;
+	if (
+		status === GENERAL_QUEUE_STATUS.COMPLETED ||
+		status === GENERAL_QUEUE_STATUS.FAILED
+	)
+		generalQueue.executed_at = now;
 	await generalQueue.save();
 	if (!ignorelogger)
-		logger.error(
+		logger.info(
 			`General Queue #${generalQueueId}: status changed to ${status}`
 		);
 	return generalQueue.dataValues;
